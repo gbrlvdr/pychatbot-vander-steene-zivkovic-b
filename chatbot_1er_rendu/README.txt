@@ -19,6 +19,7 @@ Ce programme effectue une analyse des discours de différents présidents franç
 ## Instructions d'exécution du code
 
 
+
 **Note :** Nous n'avons pas pu terminer la fonctionnalité numéro 5. 
 
 ---------
