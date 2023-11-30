@@ -6,7 +6,7 @@ def écologie(files_names):
     cont=9999999999999
     nom_pres=''
     for e in files_names:
-        f = open(entry_dir + '/' + e, 'r')
+        f = open('./cleaned/' + e, 'r')
         contenu=f.read()
         f.close()
         contenu=contenu.split()
