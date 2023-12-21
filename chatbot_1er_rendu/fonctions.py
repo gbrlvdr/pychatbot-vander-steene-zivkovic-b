@@ -98,10 +98,17 @@ def calcul_tf(files_names):
 
     # Parcourir chaque fichier
     for e in files_names:
-        with open('./cleaned/' + e, 'r') as f:
-            # Utiliser un dictionnaire pour stocker le nombre d'occurrences de chaque mot dans le fichier
-            occurrences = nb_occurences(f.read())
-            matrice[e] = occurrences
+        f=open('./cleaned/'+e,'r')
+        # Utiliser un dictionnaire pour stocker le nombre d'occurrences de chaque mot dans le fichier
+        contenu=f.read()
+        f.close()
+        occurrences = nb_occurences(contenu)
+        #nb_mots=len(contenu.split())
+        for mot,occ in occurrences.items():
+            occurrences[mot]=occ
+        matrice[e] = occurrences
+        f.close()
+
 
     return matrice
 
@@ -125,7 +132,7 @@ def calcul_idf(matrice_mots):
         idf_fich = {}
         for mot in dico:
             nb_fichiers_contenant_mot = nb_mots_fich[mot]
-            idf_fich[mot] = math.log((Nb_fich / nb_fichiers_contenant_mot) + 1)
+            idf_fich[mot] = math.log((Nb_fich / nb_fichiers_contenant_mot))
         idf[nom_fich] = idf_fich
 
     return idf
@@ -185,7 +192,7 @@ def mots_score_zero(moy_tfidf):
     # Parcourir la matrice TF-IDF
     for mot, score in moy_tfidf.items():
         # Vérifier si le score est égal à 0
-        if score < 0.5:
+        if score == 0.0:
             liste_finale.append(mot)
     return liste_finale
 
@@ -242,6 +249,26 @@ def parle_nation(tf_idf):
                             noms.append(nom_pres[11:-4])
     return nom_max, noms
 
+def écologie(files_names):
+    '''
+    Trouve le mot ecologie dans texte
+    '''
+    L=['écologie','climat']
+    cont=9999999999999
+    nom_pres=''
+    for e in files_names:
+        f = open('./cleaned/' + e, 'r')
+        contenu=f.read()
+        f.close()
+        contenu=contenu.split()
+        for i in range(len(contenu)):
+            if contenu[i] in L:
+                if i < cont:
+                    nom_pres=e
+                    cont=i
+    if cont<9999999999999:
+        return nom_pres, cont
+
 def mots_tous_presidents(tfidf, mots_score_zero=[]):
     '''Retourne les mots que tous les présidents ont dit dans leur discours'''
     dico_cpt={}
@@ -258,3 +285,51 @@ def mots_tous_presidents(tfidf, mots_score_zero=[]):
         if nb_presence==presence_requise: #regarde si le mot apparait dans tous les fichiers et l'ajoute à la liste_finale si tel est le cas
             liste_finale.append(mot)
     return liste_finale
+
+#### Partie 2
+
+def tokenize_question(text) :
+    # convertit texte en lettre minuscule
+    tokenized_text = text.lower()
+
+    # enleve la ponctuation
+    ponctu = '''!()[];:",<>./?%^&*'''
+    for j in ponctu:
+        tokenized_text = tokenized_text.replace(j, '')
+    tokenized_text = tokenized_text.replace("'", ' ')
+    tokenized_text = tokenized_text.replace('-', ' ')
+
+    # convertit le texte en str dans une liste
+    return tokenized_text.split()
+
+def norme(A) :
+    s = 0
+    for i in range(len(A)) :
+        s += A[i]*2
+    s = math.sqrt(s)
+    return s
+
+def prod_scal(A, B):
+    sommeAB = 1
+    for i in range(len(A)):
+        sommeAB += A[i]*B[i]
+    return sommeAB
+
+
+def similarite(A, B) :
+    sc = prod_scal(A, B)
+    div = norme(A) * norme(B)
+    if div != 0 :
+        sc /= div
+        return sc
+    sc = 0
+    return sc
+
+def pertin(tfidf, TFIDF_qu, files) :
+    max=0
+    for i in range(len(tfidf)):
+        a=similarite(tfidf[i],TFIDF_qu)
+        if a>=max:
+            max=a
+            nom=files[i]
+    return nom
