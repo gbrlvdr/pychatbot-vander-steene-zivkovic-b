@@ -305,12 +305,12 @@ def tokenize_question(text) :
 def norme(A) :
     s = 0
     for i in range(len(A)) :
-        s += A[i]*2
+        s += A[i]**2
     s = math.sqrt(s)
     return s
 
 def prod_scal(A, B):
-    sommeAB = 1
+    sommeAB = 0
     for i in range(len(A)):
         sommeAB += A[i]*B[i]
     return sommeAB
