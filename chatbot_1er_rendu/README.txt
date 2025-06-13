@@ -16,6 +16,8 @@ Ce programme effectue une analyse des discours de différents présidents franç
 
 6. **Mots évoqués par tous les présidents :** Affiche les mots qui ont été évoqués par tous les présidents dans leurs discours.
 
+7. **Chatbot TF-IDF :** `tfidf_chatbot.py` permet de poser une question et renvoie la phrase la plus pertinente trouvée dans les discours.
+
 ## Instructions d'exécution du code
 
 
