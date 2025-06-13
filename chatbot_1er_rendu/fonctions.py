@@ -44,38 +44,34 @@ def lower_folder(entry_dir, exit_dir, files):
     Met en minuscule le contenu des fichiers txt du dossier entry_dir et les enregistre dans exit_dir.
     "files" contient le nom des fichiers dans une liste.
     '''
-    if not os.path.exists('./' + exit_dir):  # Crée le dossier ./cleaned s'il n'existe pas
-        os.makedirs('./' + exit_dir)
+    if not os.path.exists(exit_dir):  # Crée le dossier s'il n'existe pas
+        os.makedirs(exit_dir)
     for e in files:
-        f = open(entry_dir + '/' + e, 'r')
-        content = f.read()
-        f.close()
+        with open(os.path.join(entry_dir, e), 'r') as f:
+            content = f.read()
         content_end = ''
         for j in content:
             char = ord(j)
             if 65 <= char <= 90:  # A <= char <= Z
                 char += 32
             content_end += chr(char)
-        f2 = open(exit_dir + '/' + e, 'w')
-        f2.write(content_end)
-        f2.close()
+        with open(os.path.join(exit_dir, e), 'w') as f2:
+            f2.write(content_end)
 
 def punctuation(directory, files):
     '''
     Supprime la ponctuation des fichiers du répertoire "directory" (donner les noms de fichier dans la liste "files").
     '''
     for e in files:
-        f = open(directory + "/" + e, 'r')
-        content = f.read()
-        f.close()
-        ponctu = '''!()[];:",<>./?%^&*'''
+        with open(os.path.join(directory, e), 'r') as f:
+            content = f.read()
+        ponctu = '''!()[];:\",<>./?%^&*'''
         for j in ponctu:
             content = content.replace(j, '')
         content = content.replace("'", ' ')
         content = content.replace('-', ' ')
-        f2 = open(directory + "/" + e, 'w')
-        f2.write(content)
-        f2.close()
+        with open(os.path.join(directory, e), 'w') as f2:
+            f2.write(content)
 
 def nb_occurences(s):
     '''
@@ -90,7 +86,7 @@ def nb_occurences(s):
             dico[mot] += 1
     return dico
 
-def calcul_tf(files_names):
+def calcul_tf(files_names, directory="./cleaned"):
     '''
     Retourne la matrice associant à chaque clé le nom du fichier et à chaque valeur le nombre d'occurrences de chaque mot dans chaque fichier.
     '''
@@ -98,16 +94,13 @@ def calcul_tf(files_names):
 
     # Parcourir chaque fichier
     for e in files_names:
-        f=open('./cleaned/'+e,'r')
-        # Utiliser un dictionnaire pour stocker le nombre d'occurrences de chaque mot dans le fichier
-        contenu=f.read()
-        f.close()
+        with open(os.path.join(directory, e), 'r') as f:
+            contenu = f.read()
         occurrences = nb_occurences(contenu)
         #nb_mots=len(contenu.split())
         for mot,occ in occurrences.items():
             occurrences[mot]=occ
         matrice[e] = occurrences
-        f.close()
 
 
     return matrice
@@ -249,7 +242,7 @@ def parle_nation(tf_idf):
                             noms.append(nom_pres[11:-4])
     return nom_max, noms
 
-def écologie(files_names):
+def écologie(files_names, directory="./cleaned"):
     '''
     Trouve le mot ecologie dans texte
     '''
@@ -257,9 +250,8 @@ def écologie(files_names):
     cont=9999999999999
     nom_pres=''
     for e in files_names:
-        f = open('./cleaned/' + e, 'r')
-        contenu=f.read()
-        f.close()
+        with open(os.path.join(directory, e), 'r') as f:
+            contenu = f.read()
         contenu=contenu.split()
         for i in range(len(contenu)):
             if contenu[i] in L:
@@ -305,12 +297,12 @@ def tokenize_question(text) :
 def norme(A) :
     s = 0
     for i in range(len(A)) :
-        s += A[i]*2
+        s += A[i]**2
     s = math.sqrt(s)
     return s
 
 def prod_scal(A, B):
-    sommeAB = 1
+    sommeAB = 0
     for i in range(len(A)):
         sommeAB += A[i]*B[i]
     return sommeAB

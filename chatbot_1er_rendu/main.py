@@ -1,15 +1,21 @@
 import math
-import os 
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from fonctions import *
 
 # Initialisations des variables nécessaires
 
-directory = "./speeches"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+directory = os.path.join(BASE_DIR, "speeches")
+cleaned_dir = os.path.join(BASE_DIR, "cleaned")
+
 files_names = list_of_files(directory, "txt")
 noms = affich_president(files_names)
-lower_folder(directory, "./cleaned", files_names)
-punctuation("./cleaned", files_names)
-tf = calcul_tf(files_names)
+lower_folder(directory, cleaned_dir, files_names)
+punctuation(cleaned_dir, files_names)
+tf = calcul_tf(files_names, cleaned_dir)
 idf=calcul_idf(tf)
 tf_idf=calcul_tf_idf(tf,idf)
 moy_tfidf=moyenne_scores_TF_IDF(tf_idf)
@@ -34,8 +40,8 @@ while continuer!='n':
     elif action==4: 
         res=parle_nation(tf_idf)
         print('Le président qui a le plus dit le mot "Nation" est',res[0],'et la liste des présidents qui ont parlé de "Nation" sont :', res[1])
-    elif action==5: 
-        print(écologie(files_names))
+    elif action==5:
+        print(écologie(files_names, cleaned_dir))
     else:
         print("Les mots dits par tous les présidents sont :",mots_tous_presidents(tf_idf,mots_zero))
     continuer=input("\nSouhaitez vous continuer à utiliser le programme ? taper \"n\" pour arrêter et n'importe quelle autre touche pour continuer : ")
