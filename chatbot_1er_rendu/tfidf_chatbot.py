@@ -10,7 +10,7 @@ def prepare_data():
     files = list_of_files(DIRECTORY, "txt")
     lower_folder(DIRECTORY, CLEANED, files)
     punctuation(CLEANED, files)
-    tf = calcul_tf(files)
+    tf = calcul_tf(files, CLEANED)
     idf = calcul_idf(tf)
     tf_idf = calcul_tf_idf(tf, idf)
     return files, tf_idf, idf

@@ -90,7 +90,7 @@ def nb_occurences(s):
             dico[mot] += 1
     return dico
 
-def calcul_tf(files_names):
+def calcul_tf(files_names, cleaned_dir="./cleaned"):
     '''
     Retourne la matrice associant à chaque clé le nom du fichier et à chaque valeur le nombre d'occurrences de chaque mot dans chaque fichier.
     '''
@@ -98,7 +98,7 @@ def calcul_tf(files_names):
 
     # Parcourir chaque fichier
     for e in files_names:
-        f=open('./cleaned/'+e,'r')
+        f=open(os.path.join(cleaned_dir, e),'r')
         # Utiliser un dictionnaire pour stocker le nombre d'occurrences de chaque mot dans le fichier
         contenu=f.read()
         f.close()

@@ -5,11 +5,12 @@ from fonctions import *
 # Initialisations des variables nécessaires
 
 directory = "./speeches"
+clean_dir = "./cleaned"
 files_names = list_of_files(directory, "txt")
 noms = affich_president(files_names)
-lower_folder(directory, "./cleaned", files_names)
-punctuation("./cleaned", files_names)
-tf = calcul_tf(files_names)
+lower_folder(directory, clean_dir, files_names)
+punctuation(clean_dir, files_names)
+tf = calcul_tf(files_names, clean_dir)
 idf=calcul_idf(tf)
 tf_idf=calcul_tf_idf(tf,idf)
 moy_tfidf=moyenne_scores_TF_IDF(tf_idf)
